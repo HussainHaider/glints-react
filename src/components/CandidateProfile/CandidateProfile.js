@@ -23,7 +23,9 @@ function CandidateProfile() {
     const [personalInfoEdit, setPersonalInfoEdit] = React.useState(false);
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [modalData, setModalData] = React.useState({});
-    const [candidateData, setCandidateData] = React.useState({});
+    const [candidateData, setCandidateData] = React.useState({
+        experience: []
+    });
 
     React.useEffect(()=>{
         api.getCandidate(1).then((response) => {
@@ -54,6 +56,33 @@ function CandidateProfile() {
             jobDescription: experience?.job_description || '',
             startDate: experience?.start_date || '',
             endDate: experience?.end_date || '',
+        });
+    }
+
+    function updateCandidateExperience(values, type) {
+        let newExperience = [...candidateData.experience];
+        if(type=='update') {
+            let index = newExperience.findIndex((item)=>item.id==values.id);
+            newExperience[index] = {
+                job_title: values.jobTitle,
+                company: values.company,
+                job_description: values.jobDescription,
+                start_date: values.startDate,
+                end_date: values.endDate
+            }
+        } else {
+            newExperience.push({
+                id: values.id,
+                job_title: values.jobTitle,
+                company: values.company,
+                job_description: values.jobDescription,
+                start_date: values.startDate,
+                end_date: values.endDate
+            });
+        }
+        setCandidateData({
+            ...candidateData,
+            experience: newExperience
         });
     }
 
@@ -102,35 +131,34 @@ function CandidateProfile() {
                         <AddCircleOutlineIcon />
                     </IconButton>
                 </div>
-                <ExperienceBlock>
-                    {
-                        candidateData.experience.map((experience) => {
-                            return (<React.Fragment key={experience.id}>
+                {
+                    candidateData.experience.map((experience) => {
+                        return (<ExperienceBlock key={experience.id}>
+                            <div>
+                                <Typography variant="h6">{experience.job_title}</Typography>
+                                <IconButton aria-label="edit" color="primary" onClick={()=>{setDataInModal(experience)}}>
+                                    <EditIcon />
+                                </IconButton>
+                            </div>
+                            <div>
                                 <div>
-                                    <Typography variant="h6">{experience.job_title}</Typography>
-                                    <IconButton aria-label="edit" color="primary" onClick={()=>{setDataInModal(experience)}}>
-                                        <EditIcon />
-                                    </IconButton>
+                                    <CompanyLogo alt={experience.company} src="/static/images/avatar/1.jpg" />
+                                    <Typography variant="subtitle1">{experience.company}</Typography>
                                 </div>
-                                <div>
-                                    <div>
-                                        <CompanyLogo alt={experience.company} src="/static/images/avatar/1.jpg" />
-                                        <Typography variant="subtitle1">{experience.company}</Typography>
-                                    </div>
-                                    <Typography variant="subtitle2">{experience.start_date} - {experience.end_date}</Typography>
-                                </div>
-                                <Typography variant="body2">
-                                    {experience.job_description}
-                                </Typography>
-                            </React.Fragment>);
-                        })
-                    }
-                </ExperienceBlock>
+                                <Typography variant="subtitle2">{experience.start_date} - {experience.end_date}</Typography>
+                            </div>
+                            <Typography variant="body2">
+                                {experience.job_description}
+                            </Typography>
+                        </ExperienceBlock>);
+                    })
+                }
             </ExperienceSection>
             <ExperienceDialog
                 open={isModalOpen}
                 closehandler={()=>{setIsModalOpen(false)}}
                 data={modalData}
+                updateExperience={updateCandidateExperience}
                 candidateId={'1'}
             />
         </>)

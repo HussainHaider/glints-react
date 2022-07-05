@@ -40,6 +40,7 @@ function ExperienceDialog(props) {
         closehandler,
         data,
         candidateId,
+        updateExperience,
     } = props;
 
     const formik = useFormik({
@@ -56,12 +57,20 @@ function ExperienceDialog(props) {
         onSubmit: (values) => {
             if(!data.id) {
                 api.addExperience(candidateId, values).then((response) => {
+                    updateExperience({
+                        ...values,
+                        id: response.data.data.id
+                    }, 'new')
                     closehandler();
                 }).catch((err) => {
                     console.log(err);
                 });
             } else {
-                api.updateExperience(1, values).then((response) => {
+                api.updateExperience(data.id, values).then((response) => {
+                    updateExperience({
+                        ...values,
+                        id: data.id
+                    }, 'update')
                     closehandler();
                 }).catch((err) => {
                     console.log(err);
@@ -151,7 +160,8 @@ ExperienceDialog.propTypes = {
     isNew: PropTypes.bool,
     open: PropTypes.bool,
     closehandler: PropTypes.func,
-    candidateId: PropTypes.string
+    candidateId: PropTypes.string,
+    updateExperience: PropTypes.func
 };
 
 export default ExperienceDialog;
