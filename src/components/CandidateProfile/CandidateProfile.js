@@ -28,7 +28,10 @@ function CandidateProfile() {
     });
 
     React.useEffect(()=>{
-        api.getCandidate(1).then((response) => {
+        const user = window.localStorage.getItem('user');
+        let value = JSON.parse(user);
+
+        api.getCandidate(value.id).then((response) => {
             let data = {
                 ...response.data.data,
             }
@@ -159,7 +162,7 @@ function CandidateProfile() {
                 closehandler={()=>{setIsModalOpen(false)}}
                 data={modalData}
                 updateExperience={updateCandidateExperience}
-                candidateId={'1'}
+                candidateId={candidateData?.id}
             />
         </>)
     }

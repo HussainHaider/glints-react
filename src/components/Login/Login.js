@@ -8,7 +8,10 @@ import Typography from '@mui/material/Typography';
 import {LoginBlock} from './styles';
 import {LoginForm} from './styles';
 
+import { useNavigate } from "react-router-dom";
+
 import * as yup from 'yup';
+import * as api from './api';
 
 
 const validationSchema = yup.object({
@@ -18,19 +21,26 @@ const validationSchema = yup.object({
     .required('Email is required'),
   password: yup
     .string('Enter your password')
-    .min(8, 'Password should be of minimum 8 characters length')
+    // .min(8, 'Password should be of minimum 8 characters length')
     .required('Password is required'),
 });
 
 const Login = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
-      email: 'foobar@example.com',
-      password: 'foobar',
+      email: 'hassanhaider490@gmail.com',
+      password: '12345',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      api.signIn(values).then((response) => {
+        let resp = response.data;
+        window.localStorage.setItem('user', JSON.stringify({id: resp.data.id, token: resp.token}));
+        navigate("/", { replace: true });
+      }).catch((err) => {
+        console.log(err);
+      });
     },
   });
 

@@ -21,6 +21,9 @@ export const PERMISSION_API = {
     DEFAULT: `${BASE_URL}/${PERMISSION}/:id`,
 };
 
+export const AUTH_API = {
+    SIGN_IN: `${BASE_URL}/signIn`,
+};
 
 
 
