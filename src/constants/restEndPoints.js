@@ -4,7 +4,7 @@ const PROTOCOL = env.REACT_APP_PROTOCOL;
 const ADDRESS = env.REACT_APP_ADDRESS;
 const PORT = env.REACT_APP_PORT;
 
-const BASE_URL = `${PROTOCOL}://${ADDRESS}:${PORT}/api`;
+const BASE_URL = `${PROTOCOL}://${ADDRESS}/api`;
 
 const CANDIDATE = 'candidate'
 export const CANDIDATE_API = {
