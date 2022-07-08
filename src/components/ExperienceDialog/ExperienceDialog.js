@@ -160,7 +160,7 @@ ExperienceDialog.propTypes = {
     isNew: PropTypes.bool,
     open: PropTypes.bool,
     closehandler: PropTypes.func,
-    candidateId: PropTypes.string,
+    candidateId: PropTypes.number,
     updateExperience: PropTypes.func
 };
 

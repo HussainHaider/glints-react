@@ -1,9 +1,9 @@
 import React from 'react';
 import { useFormik } from 'formik';
 
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import {LoginBlock} from './styles';
 import {LoginForm} from './styles';
@@ -26,6 +26,7 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -34,11 +35,14 @@ const Login = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      setIsLoading(true);
       api.signIn(values).then((response) => {
+        setIsLoading(false);
         let resp = response.data;
         window.localStorage.setItem('user', JSON.stringify({id: resp.data.id, token: resp.token}));
         navigate("/", { replace: true });
       }).catch((err) => {
+        setIsLoading(false);
         console.log(err);
       });
     },
@@ -69,9 +73,15 @@ const Login = () => {
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
         />
-        <Button color="primary" variant="contained" fullWidth type="submit">
+        <LoadingButton
+          color="primary"
+          variant="contained"
+          fullWidth
+          type="submit"
+          loading={isLoading}
+        >
           Submit
-        </Button>
+        </LoadingButton>
       </LoginForm>
     </LoginBlock>
   );

@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
